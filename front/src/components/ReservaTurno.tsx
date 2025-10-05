@@ -26,8 +26,16 @@ const ReservaTurno = () => {
     navigate("/dashboard/cliente/menu");
   };
 
+  /*pattern return: Flujo paso a paso con navegación hacia atrás en cada etapa */
+  /* Resuelve el problema: "No hay navegación entre las vistas" */
+  
   if (!servicio) {
-    return <ServiciosList onSelectServicio={setServicio} />;
+    return (
+      <ServiciosList 
+        onSelectServicio={setServicio}
+        onVolver={() => navigate("/dashboard/cliente/menu")} 
+      />
+    );
   }
 
   if (!ubicacion) {
@@ -35,13 +43,18 @@ const ReservaTurno = () => {
       <UbicacionesList
         servicioId={servicio.id}
         onSelectUbicacion={setUbicacion}
+        onVolver={() => setServicio(null)} // /*pattern return: Vuelve a la selección de servicio */
       />
     );
   }
 
   if (!fecha) {
     return (
-      <CalendarioTurnos servicioId={servicio.id} onSelectFecha={setFecha} />
+      <CalendarioTurnos 
+        servicioId={servicio.id} 
+        onSelectFecha={setFecha}
+        onVolver={() => setUbicacion(null)} // /*pattern return: Vuelve a la selección de ubicación */
+      />
     );
   }
 
@@ -51,6 +64,7 @@ const ReservaTurno = () => {
         servicioId={servicio.id}
         fecha={fecha}
         onSeleccionarHora={setHora}
+        onVolver={() => setFecha(null)} // /*pattern return: Vuelve a la selección de fecha */
       />
     );
   }
@@ -61,7 +75,7 @@ const ReservaTurno = () => {
       ubicacion={ubicacion}
       fecha={fecha}
       hora={hora}
-      onVolver={() => setHora(null)}
+      onVolver={() => setHora(null)} // /*pattern return: Vuelve a la selección de horario */
       onConfirmar={resetReserva}
     />
   );

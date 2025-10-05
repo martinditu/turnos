@@ -1,21 +1,32 @@
 spring:
   datasource:
-    url: jdbc:mysql://localhost:3306/turnos?useSSL=false&serverTimezone=UTC
-    username: root
-    password: password
+    # /*pattern return: Variables de entorno para evitar hardcodear credenciales sensibles */
+    # Ahora la configuración se lee desde variables de entorno (.env)
+    url: ${DB_URL:jdbc:mysql://localhost:3306/turnos?useSSL=false&serverTimezone=UTC}
+    username: ${DB_USERNAME:root}
+    password: ${DB_PASSWORD:root}
     driver-class-name: com.mysql.cj.jdbc.Driver
 
   jpa:
     hibernate:
-      ddl-auto: create
+      # /*pattern return: Cambiado de 'create' a 'update' para PERSISTIR la BD */
+      # 'create' borraba toda la BD al reiniciar, 'update' solo actualiza el schema sin borrar datos
+      ddl-auto: update
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MySQL8Dialect
         format_sql: true
+    # /*pattern return: Configuración para logging SQL en desarrollo */
+    show-sql: false
 
+# /*pattern return: JWT configurado con variables de entorno */
 jwt:
-  claveSecreta: hg76Kjsh983hfd!GJgPskdfnQW3498hgf4JHGFh9asdFNLkHWe98hWEkjsdfhJGH8
-  tiempoExpiracion: 86400000 # 24 horas en milisegundos
+  claveSecreta: ${JWT_SECRET:hg76Kjsh983hfd!GJgPskdfnQW3498hgf4JHGFh9asdFNLkHWe98hWEkjsdfhJGH8}
+  tiempoExpiracion: ${JWT_EXPIRATION:86400000} # 24 horas en milisegundos
 
-MAIL_USERNAME: INGRESAR_MAIL
-MAIL_PASSWORD: INGRESAR_CODIGO
+# /*pattern return: Credenciales de email desde variables de entorno */
+MAIL_USERNAME: ${MAIL_USERNAME:correo@ejemplo.com}
+MAIL_PASSWORD: ${MAIL_PASSWORD:codigo_aplicacion}
+
+server:
+  port: ${SERVER_PORT:8080}

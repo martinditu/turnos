@@ -5,10 +5,11 @@ import useDocumentTitle from "../hooks/useDocumentTitle";
 
 interface Props {
   onSelectServicio: (servicio: ServicioResponseDTO) => void;
+  onVolver?: () => void; // /*pattern return: Callback para volver atrás */
 }
 
 // lista de servicios disponibles para que el usuario seleccione uno
-const ServiciosList = ({ onSelectServicio }: Props) => {
+const ServiciosList = ({ onSelectServicio, onVolver }: Props) => {
   useDocumentTitle("Servicios disponibles");
 
   const [servicios, setServicios] = useState<ServicioResponseDTO[]>([]);
@@ -34,6 +35,15 @@ const ServiciosList = ({ onSelectServicio }: Props) => {
   return (
     <div className="p-4 text-center">
       <h2 className="text-xl font-semibold mb-4">Servicios disponibles</h2>
+      {/*pattern return: Botón para volver al menú principal */}
+      {onVolver && (
+        <button
+          onClick={onVolver}
+          className="mb-4 bg-gray-500 text-white py-2 px-4 rounded hover:bg-gray-600 transition"
+        >
+          ← Volver al Menú
+        </button>
+      )}
       <ul className="space-y-2">
         {servicios.map((servicio) => (
           <li key={servicio.id}>

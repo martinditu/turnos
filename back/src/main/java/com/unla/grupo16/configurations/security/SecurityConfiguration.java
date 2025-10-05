@@ -14,17 +14,20 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import com.unla.grupo16.configurations.security.jwt.ErrorAutenticacion;
+import com.unla.grupo16.configurations.security.jwt.ErrorAccesoDenegado;
 import com.unla.grupo16.configurations.security.jwt.FiltroAutenticacion;
 import com.unla.grupo16.services.impl.UserServiceImp;
 
 import lombok.RequiredArgsConstructor;
 
+/*pattern return: Configuración de seguridad mejorada con manejo de acceso denegado */
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfiguration {
 
     private final ErrorAutenticacion errorAutenticacion;
+    private final ErrorAccesoDenegado errorAccesoDenegado; // /*pattern return: Maneja errores 403 */
     private final FiltroAutenticacion filtroAutenticacion;
     private final UserServiceImp userService;
 
@@ -44,6 +47,7 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests(auth -> auth
                 .requestMatchers(
                         "/api/auth/login",
+                        "/api/auth/register", // /*pattern return: Endpoint de registro público */
                         "/v3/api-docs/**",
                         "/swagger-ui/**",
                         "/swagger-ui.html"
@@ -53,7 +57,8 @@ public class SecurityConfiguration {
                 .anyRequest().authenticated()
                 )
                 .exceptionHandling(ex -> ex
-                .authenticationEntryPoint(errorAutenticacion) // 401
+                .authenticationEntryPoint(errorAutenticacion) // /*pattern return: Maneja errores 401 */
+                .accessDeniedHandler(errorAccesoDenegado) // /*pattern return: Maneja errores 403 */
                 )
                 .sessionManagement(session -> session
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS) // solo jwt 

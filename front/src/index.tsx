@@ -1,6 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
+import './styles/errors.css'; // /*pattern return: Estilos para páginas de error */
+import './styles/register.css'; // /*pattern return: Estilos para página de registro */
+import './styles/login.css'; // /*pattern return: Estilos para página de login */
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 

@@ -1,5 +1,8 @@
+/*pattern return: Página de login mejorada con diseño moderno */
+/* Incluye enlace al registro de nuevos usuarios */
+
 import { useState, FormEvent } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link, useLocation } from "react-router-dom";
 import { loginUsuario } from "../api/authService";
 import { useAuthContext } from "../context/AuthContext";
 import useDocumentTitle from "../hooks/useDocumentTitle";
@@ -13,6 +16,10 @@ const Login = () => {
 
   const { login } = useAuthContext();
   const navigate = useNavigate();
+  const location = useLocation();
+  
+  /*pattern return: Mensaje de éxito si viene desde registro */
+  const successMessage = location.state?.message;
 
   const manejarCambio = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -45,40 +52,61 @@ const Login = () => {
   };
 
   return (
-    <div className="max-w-sm mx-auto mt-20 p-6 border rounded shadow">
-      <h2 className="text-xl font-bold mb-4 text-center">Iniciar sesion</h2>
+    <div className="login-container">
+      <div className="login-card">
+        <div className="login-header">
+          <h1>Bienvenido</h1>
+          <p>Inicia sesión en el sistema de turnos</p>
+        </div>
 
-      <form onSubmit={manejarEnvio} noValidate className="space-y-4">
-        <input
-          type="email"
-          name="email"
-          placeholder="Email"
-          value={formData.email}
-          onChange={manejarCambio}
-          required
-          className="w-full p-2 border rounded"
-        />
+        {/*pattern return: Mensaje de éxito al registrarse */}
+        {successMessage && (
+          <div className="success-message">{successMessage}</div>
+        )}
 
-        <input
-          type="password"
-          name="password"
-          placeholder="Contrasena"
-          value={formData.password}
-          onChange={manejarCambio}
-          required
-          className="w-full p-2 border rounded"
-        />
+        <form onSubmit={manejarEnvio} noValidate className="login-form">
+          <div className="form-group">
+            <label htmlFor="email">Email</label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              placeholder="correo@ejemplo.com"
+              value={formData.email}
+              onChange={manejarCambio}
+              required
+            />
+          </div>
 
-        {error && <p className="text-red-600 text-sm">{error}</p>}
+          <div className="form-group">
+            <label htmlFor="password">Contraseña</label>
+            <input
+              type="password"
+              id="password"
+              name="password"
+              placeholder="Tu contraseña"
+              value={formData.password}
+              onChange={manejarCambio}
+              required
+            />
+          </div>
 
-        <button
-          type="submit"
-          disabled={loading}
-          className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition"
-        >
-          {loading ? "Ingresando..." : "Entrar"}
-        </button>
-      </form>
+          {error && <div className="error-alert">{error}</div>}
+
+          <button
+            type="submit"
+            disabled={loading}
+            className="btn-login"
+          >
+            {loading ? "Ingresando..." : "Iniciar Sesión"}
+          </button>
+
+          {/*pattern return: Enlace al registro de nuevos clientes */}
+          <div className="register-link">
+            ¿No tienes cuenta? <Link to="/register">Regístrate aquí</Link>
+          </div>
+        </form>
+      </div>
     </div>
   );
 };
