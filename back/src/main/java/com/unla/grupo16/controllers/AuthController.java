@@ -15,9 +15,11 @@ import com.unla.grupo16.exception.AutenticacionException;
 import com.unla.grupo16.exception.RecursoNoEncontradoException;
 import com.unla.grupo16.exception.UsuarioDeshabilitadoException;
 import com.unla.grupo16.models.dtos.requests.LoginRequestDTO;
+import com.unla.grupo16.models.dtos.requests.RegistroClienteRequestDTO;
 import com.unla.grupo16.models.dtos.responses.LoginResponseDto;
 import com.unla.grupo16.models.entities.UserEntity;
 import com.unla.grupo16.repositories.IUserRepository;
+import com.unla.grupo16.services.interfaces.IClienteService;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -33,11 +35,14 @@ public class AuthController {
     private final AuthenticationManager authenticationManager;
     private final JwtUtil jwtUtil;
     private final IUserRepository userRepo;
+    private final IClienteService clienteService; // /*pattern return: Servicio para registrar clientes */
 
-    public AuthController(AuthenticationManager authenticationManager, JwtUtil jwtUtil, IUserRepository userRepo) {
+    public AuthController(AuthenticationManager authenticationManager, JwtUtil jwtUtil, 
+                         IUserRepository userRepo, IClienteService clienteService) {
         this.authenticationManager = authenticationManager;
         this.jwtUtil = jwtUtil;
         this.userRepo = userRepo;
+        this.clienteService = clienteService;
     }
 
     @Operation(summary = "Autenticar usuario y generar JWT")
@@ -98,6 +103,35 @@ public class AuthController {
 
         } catch (AuthenticationException e) {
             throw new AutenticacionException("Credenciales invalidas");
+        }
+    }
+
+    /*pattern return: Endpoint público para registro de nuevos clientes */
+    /* Permite que cualquier persona se registre como cliente sin necesidad de autenticación */
+    /* Resuelve el problema: "No hay registro de clientes" */
+    @Operation(summary = "Registrar un nuevo cliente en el sistema")
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "Cliente registrado exitosamente"),
+        @ApiResponse(responseCode = "400", description = "Error en los datos proporcionados"),
+        @ApiResponse(responseCode = "409", description = "El email ya está registrado"),
+        @ApiResponse(responseCode = "500", description = "Error al registrar el cliente")
+    })
+    @PostMapping("/register")
+    public ResponseEntity<?> registrarCliente(@Valid @RequestBody RegistroClienteRequestDTO registro) {
+        try {
+            /*pattern return: Delega la lógica de registro al servicio */
+            clienteService.registrarNuevoCliente(registro);
+            
+            var respuesta = new java.util.HashMap<String, Object>();
+            respuesta.put("mensaje", "Cliente registrado exitosamente");
+            respuesta.put("email", registro.email());
+            respuesta.put("timestamp", java.time.LocalDateTime.now());
+            
+            return ResponseEntity.ok(respuesta);
+            
+        } catch (IllegalArgumentException e) {
+            /*pattern return: Manejo de errores específicos */
+            throw new NegocioException(e.getMessage());
         }
     }
 }

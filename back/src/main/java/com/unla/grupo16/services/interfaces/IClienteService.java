@@ -2,6 +2,7 @@ package com.unla.grupo16.services.interfaces;
 
 import com.unla.grupo16.exception.NegocioException;
 import com.unla.grupo16.exception.RecursoNoEncontradoException;
+import com.unla.grupo16.models.dtos.requests.RegistroClienteRequestDTO;
 import com.unla.grupo16.models.dtos.responses.ClienteAdminDTO;
 import com.unla.grupo16.models.dtos.responses.ClientesAdminResponseDTO;
 
@@ -16,5 +17,8 @@ public interface IClienteService {
     void darDeAltaCliente(Integer clienteId) throws RecursoNoEncontradoException;
 
     ClienteAdminDTO editarCliente(Integer clienteId, ClienteAdminDTO clienteDto) throws RecursoNoEncontradoException;
+
+    /*pattern return: Método para registrar nuevos clientes desde el endpoint público */
+    void registrarNuevoCliente(RegistroClienteRequestDTO registro);
 
 }

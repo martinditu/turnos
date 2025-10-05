@@ -1,9 +1,19 @@
+/*pattern return: Configuración de rutas y manejo de errores mejorado */
+/* Ahora incluye páginas específicas para diferentes tipos de errores */
+/* - /unauthorized: Error 403 cuando no tienes permisos */
+/* - /server-error: Error 500 cuando falla el backend */
+/* - 404: Ruta no encontrada */
+
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider } from "./context/AuthContext";
 import Login from "./pages/Login";
+import Register from "./pages/Register"; // /*pattern return: Página de registro */
 import PrivateRoute from "./routes/PrivateRoute";
 import DashboardAdminRoutes from "./routes/dashboard/AdminDashboardRoutes";
 import DashboardClienteRoutes from "./routes/dashboard/ClienteDashboardRoutes";
+import Unauthorized from "./pages/Unauthorized";
+import ServerError from "./pages/ServerError";
+import NotFound from "./pages/NotFound";
 
 function App() {
   return (
@@ -14,6 +24,13 @@ function App() {
         <Routes>
           {/* ruta publica para login */}
           <Route path="/login" element={<Login />} />
+          {/*pattern return: Ruta pública para registro de nuevos clientes */}
+          <Route path="/register" element={<Register />} />
+
+          {/*pattern return: Páginas de error personalizadas */}
+          <Route path="/unauthorized" element={<Unauthorized />} />
+          <Route path="/server-error" element={<ServerError />} />
+          <Route path="/not-found" element={<NotFound />} />
 
           {/* rutas privadas para ADMIN */}
           <Route
@@ -37,7 +54,8 @@ function App() {
 
           {/* redirecciones por defecto */}
           <Route path="/" element={<Navigate to="/login" />} />
-          <Route path="*" element={<Navigate to="/login" />} />
+          {/*pattern return: Rutas no encontradas redirigen a página 404 */}
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
     </AuthProvider>

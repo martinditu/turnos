@@ -9,12 +9,14 @@ import useFechasYHorarios from "../hooks/useFechasYHorarios";
 interface CalendarioTurnosProps {
   servicioId: number; // id del servicio para filtrar fechas
   onSelectFecha: (fecha: string) => void; // func para notificar fecha seleccionada
+  onVolver?: () => void; // /*pattern return: Callback para volver al paso anterior */
 }
 
 // componente q muestra un calendario con fechas y horarios disp
 function CalendarioTurnos({
   servicioId,
   onSelectFecha,
+  onVolver,
 }: CalendarioTurnosProps) {
   useDocumentTitle("CalendarioTurnos");
 
@@ -56,6 +58,15 @@ function CalendarioTurnos({
   return (
     <div>
       <h2>Selecciona una fecha</h2>
+      {/*pattern return: Botón para volver a la selección de ubicaciones */}
+      {onVolver && (
+        <button
+          onClick={onVolver}
+          className="mb-4 bg-gray-500 text-white py-2 px-4 rounded hover:bg-gray-600 transition"
+        >
+          ← Volver a Ubicaciones
+        </button>
+      )}
       <DatePicker
         selected={fechaSeleccionada}
         onChange={alSeleccionarFecha}

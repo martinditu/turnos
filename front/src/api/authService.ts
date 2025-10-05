@@ -54,3 +54,22 @@ export const loginUsuario = async (email: string, password: string): Promise<Usu
 export const logoutUsuario = () => {
   limpiarUsuarioDeLocalStorage();
 };
+
+/*pattern return: Función para registrar nuevos clientes */
+/* Envía los datos al endpoint público /register */
+/* No requiere autenticación */
+export const registrarCliente = async (datos: {
+  nombre: string;
+  apellido: string;
+  email: string;
+  password: string;
+  telefono: string;
+}): Promise<any> => {
+  try {
+    const { data } = await axios.post(`${API_BASE_URL}/register`, datos);
+    return data;
+  } catch (error: any) {
+    console.error("Error al registrar cliente:", error.response?.data || error.message);
+    throw error;
+  }
+};

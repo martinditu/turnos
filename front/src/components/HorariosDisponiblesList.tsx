@@ -5,12 +5,14 @@ interface Props {
   servicioId: number;
   fecha: string; // formato "yyyy-MM-dd"
   onSeleccionarHora: (hora: string) => void;
+  onVolver?: () => void; // /*pattern return: Callback para volver al paso anterior */
 }
 
 function ListaHorariosDisponibles({
   servicioId,
   fecha,
   onSeleccionarHora,
+  onVolver,
 }: Props) {
   useDocumentTitle("Horarios disponibles");
 
@@ -31,6 +33,15 @@ function ListaHorariosDisponibles({
   return (
     <div>
       <h3>Horarios disponibles para {formatearFecha(fecha)}</h3>
+      {/*pattern return: Botón para volver a la selección de fecha */}
+      {onVolver && (
+        <button
+          onClick={onVolver}
+          className="mb-4 bg-gray-500 text-white py-2 px-4 rounded hover:bg-gray-600 transition"
+        >
+          ← Volver al Calendario
+        </button>
+      )}
       <ul className="flex flex-wrap gap-2 mt-2">
         {horarios.map((hora) => (
           <li key={hora}>
