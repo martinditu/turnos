@@ -1,0 +1,30 @@
+# === Java / Spring Boot ===
+/back/target/
+/back/.classpath
+/back/.project
+/back/.settings/
+/back/*.iml
+*.log
+*.tmp
+
+# === Node / React ===
+/front/node_modules/
+/front/build/
+/front/.env
+/front/.DS_Store
+
+# === General ===
+*.log
+*.bak
+*.swp
+*.swo
+*.tmp
+*.idea/
+*.vscode/
+.DS_Store
+.env
+
+# === OS ===
+Thumbs.db
+ehthumbs.db
+Desktop.ini
