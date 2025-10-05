@@ -1,21 +1,25 @@
 spring:
   datasource:
-    url: jdbc:mysql://localhost:3306/turnos?useSSL=false&serverTimezone=UTC
-    username: root
-    password: password
+    # /*pattern return*/ Evitamos credenciales hardcodeadas y permitimos configurar por entorno
+    url: ${DB_URL:jdbc:mysql://localhost:3306/turnos?useSSL=false&serverTimezone=UTC}
+    username: ${DB_USER:root}
+    password: ${DB_PASSWORD:password}
     driver-class-name: com.mysql.cj.jdbc.Driver
 
   jpa:
     hibernate:
-      ddl-auto: create
+      # /*pattern return*/ Cambiamos create -> update para no borrar la BD en cada arranque
+      ddl-auto: update
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MySQL8Dialect
         format_sql: true
 
 jwt:
-  claveSecreta: hg76Kjsh983hfd!GJgPskdfnQW3498hgf4JHGFh9asdFNLkHWe98hWEkjsdfhJGH8
-  tiempoExpiracion: 86400000 # 24 horas en milisegundos
+  # /*pattern return*/ Leemos secreto y expiración desde variables de entorno con defaults seguros de dev
+  claveSecreta: ${JWT_SECRET:dev-change-me-secret-32-bytes-min}
+  tiempoExpiracion: ${JWT_EXPIRATION_MS:86400000} # 24 horas
 
-MAIL_USERNAME: INGRESAR_MAIL
-MAIL_PASSWORD: INGRESAR_CODIGO
+# /*pattern return*/ Credenciales de SMTP leídas desde entorno
+MAIL_USERNAME: ${MAIL_USERNAME:}
+MAIL_PASSWORD: ${MAIL_PASSWORD:}
